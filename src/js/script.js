@@ -9,6 +9,7 @@
       bookList: '.books-panel .books-list',
       bookImage: '.book__image',
       bookFilter: '.filters',
+      ratings: '.book__rating__fill',
     },
   };
 
@@ -19,7 +20,12 @@
   };
 
   function render() {
+    const listOfBook = document.querySelector(select.containerOf.bookList);
+
     for (let book of dataSource.books) {
+      const ratingBgc = determineRatingBgc(book.rating);
+      const ratingWidth = determineRatingWidth(book.rating);
+
       const generatedHTML = templates.booksList({
         name: book.name,
         price: book.price,
@@ -27,9 +33,13 @@
         rating: book.rating,
         id: book.id,
       });
-      const listOfBook = document.querySelector(select.containerOf.bookList);
+
       const elem = utils.createDOMFromHTML(generatedHTML);
       listOfBook.appendChild(elem);
+
+      const ratingFill = elem.querySelector(select.containerOf.ratings);
+      ratingFill.style.width = ratingWidth;
+      ratingFill.style.background = ratingBgc;
     }
   }
   const favoriteBooks = [];
@@ -93,6 +103,21 @@
         filterOfHiddenBooks.classList.remove('hidden');
       }
     }
+  }
+  function determineRatingBgc(rating) {
+    if (rating < 6) {
+      return 'linear-gradient(to bottom, #fefcea 0%, #f1da36 100%)';
+    } else if (rating < 8) {
+      return 'linear-gradient(to bottom, #b4df5b 0%,#b4df5b 100%)';
+    } else if (rating < 9) {
+      return 'linear-gradient(to bottom, #299a0b 0%, #299a0b 100%)';
+    } else {
+      return 'linear-gradient(to bottom, #ff0084 0%,#ff0084 100%)';
+    }
+  }
+
+  function determineRatingWidth(rating) {
+    return rating * 10 + '%';
   }
   render();
   initActions();
